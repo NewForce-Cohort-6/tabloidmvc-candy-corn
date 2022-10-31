@@ -53,5 +53,32 @@ namespace TabloidMVC.Repositories
                 }
             }
         }
+        public void AddUser(UserProfile user)
+        {
+            using (var conn = Connection)
+            {
+                conn.Open();
+                using (var cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"
+                        INSERT INTO UserProfile (FirstName, LastName, DisplayName, Email, CreateDateTime, ImageLocation, UserTypeId)
+                        OUTPUT INSERTED.ID
+                        VALUES (@firstName, @lastName, @displayName, @email, @createDateTime, @imageLocation, @userTypeId);
+                    ";
+
+                    cmd.Parameters.AddWithValue("@firstName", user.FirstName);
+                    cmd.Parameters.AddWithValue("@lastName", user.LastName);
+                    cmd.Parameters.AddWithValue("@displayName", user.DisplayName);
+                    cmd.Parameters.AddWithValue("@email", user.Email);
+                    cmd.Parameters.AddWithValue("@createDateTime", user.CreateDateTime);
+                    cmd.Parameters.AddWithValue("@imageLocation", user.ImageLocation ?? "https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_960_720.png");
+                    cmd.Parameters.AddWithValue("@userTypeId", user.UserTypeId);
+
+                    int id = (int)cmd.ExecuteScalar();
+
+                    user.Id = id;
+                }
+            }
+        }
     }
 }
