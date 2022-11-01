@@ -38,7 +38,16 @@ namespace TabloidMVC.Controllers
         // GET: UserProfileController/Details/5
         public ActionResult Details(int id)
         {
-            return View();
+            UserProfile user = _userProfileRepository.GetById(id);
+            List<UserType> userTypes = _userTypeRepository.GetUserTypes();
+
+            UserProfileViewModel vm = new()
+            {
+                UserProfile = user,
+                UserTypes = userTypes
+            };
+
+            return View(vm);
         }
 
         // GET: UserProfileController/Register
