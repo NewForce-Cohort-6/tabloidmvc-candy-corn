@@ -53,10 +53,17 @@ namespace TabloidMVC.Controllers
         // GET: PostController/Delete/5
         public ActionResult Delete(int id)
         {
-            int userId = GetCurrentUserProfileId();
-            var post = _postRepository.GetUserPostById(id, userId);
+            try
+            {
+                int userId = GetCurrentUserProfileId();
+                var post = _postRepository.GetUserPostById(id, userId);
 
-            return View(post);
+                return View(post);
+            }
+            catch (Exception ex)
+            {
+                return View("Index");
+            }
 
         }
 
