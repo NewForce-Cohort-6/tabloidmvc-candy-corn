@@ -1,8 +1,11 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.VisualBasic;
+using System;
 using System.Security.Claims;
+using TabloidMVC.Models;
 using TabloidMVC.Models.ViewModels;
 using TabloidMVC.Repositories;
 
@@ -14,7 +17,7 @@ namespace TabloidMVC.Controllers
         private readonly ITagRepository _tagRepository;
         //private readonly ICategoryRepository _categoryRepository;
 
-        public TagController(ITagRepository tagRepository, ICategoryRepository categoryRepository)
+        public TagController(ITagRepository tagRepository)
         {
             _tagRepository = tagRepository;
             //_categoryRepository = categoryRepository;
@@ -25,6 +28,34 @@ namespace TabloidMVC.Controllers
             var posts = _tagRepository.GetAll();
             return View(posts);
         }
+
+        // GET: TagsController/Edit/5
+        public ActionResult Edit(int id)
+        {
+            return View();
+        }
+
+        //POST: TagsController/Edit/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Edit(int id, Tag tag)
+        {
+            tag.Id = id;
+            try
+            {
+                _tagRepository.UpdateTag(tag);
+                return RedirectToAction(nameof(Index));
+            }
+            catch (Exception ex)
+            {
+                return View(tag);
+            }
+        }
+    }
+}
+
+
+    // Unused methods
 
         //public IActionResult Details(int id)
         //{
@@ -72,6 +103,6 @@ namespace TabloidMVC.Controllers
         //{
         //    string id = User.FindFirstValue(ClaimTypes.NameIdentifier);
         //    return int.Parse(id);
-        }
-    }
+    //}
+    //}
 //}
