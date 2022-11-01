@@ -1,7 +1,5 @@
-﻿using Microsoft.Data.SqlClient.Server;
-using System;
+﻿using System;
 using System.ComponentModel.DataAnnotations;
-using System.Runtime.Intrinsics.X86;
 
 namespace TabloidMVC.Models
 {
