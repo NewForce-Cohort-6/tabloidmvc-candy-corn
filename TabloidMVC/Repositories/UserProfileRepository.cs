@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 using System.Collections.Generic;
-using System.Security.Cryptography;
+using System.Linq;
 using TabloidMVC.Models;
 using TabloidMVC.Utils;
 
@@ -10,6 +10,9 @@ namespace TabloidMVC.Repositories
     {
         public UserProfileRepository(IConfiguration config) : base(config) { }
 
+        /**
+         * Get all user profiles sorted by User DisplayName
+         **/
         public List<UserProfile> GetAll()
         {
             using (var conn = Connection)
@@ -51,7 +54,8 @@ namespace TabloidMVC.Repositories
 
                     reader.Close();
 
-                    return userProfiles;
+                    List<UserProfile> sortedList = userProfiles.OrderBy(uP => uP.DisplayName).ToList();
+                    return sortedList;
                 }
             }
         }
