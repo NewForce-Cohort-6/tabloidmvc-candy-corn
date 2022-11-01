@@ -77,6 +77,42 @@ namespace TabloidMVC.Controllers
             }
         }
 
+        // GET: PostController1/Edit/5
+        public ActionResult Edit(int id)
+        {
+            var vm = new PostEditViewModel();
+            int userId = GetCurrentUserProfileId();
+            vm.CategoryOptions = _categoryRepository.GetAll();
+            vm.Post = _postRepository.GetUserPostById(id, userId);
+
+            if (vm.Post == null)
+            {
+                return NotFound();
+            }
+
+            return View(vm);
+        }
+
+        // POST: PostController1/Edit/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Edit(int id, PostEditViewModel vm)
+        {
+            try
+            {
+                vm.CategoryOptions = _categoryRepository.GetAll();
+                vm.Post.CreateDateTime = DateAndTime.Now;
+                vm.Post.UserProfileId = GetCurrentUserProfileId();
+                _postRepository.UpdatePost(vm.Post);
+
+                return RedirectToAction("Index");
+            }
+            catch (Exception ex)
+            {
+                return View(vm);
+            }
+        }
+
         public IActionResult Create()
         {
             var vm = new PostCreateViewModel();
