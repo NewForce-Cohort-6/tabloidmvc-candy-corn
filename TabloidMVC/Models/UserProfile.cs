@@ -26,5 +26,12 @@ namespace TabloidMVC.Models
                 return $"{FirstName} {LastName}";
             }
         }
+        public string CreateDate
+        {
+            get
+            { 
+                return CreateDateTime.Date.ToShortDateString(); 
+            }
+        }
     }
 }
