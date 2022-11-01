@@ -83,24 +83,35 @@ namespace TabloidMVC.Controllers
             }
         }
 
-        // GET: UserProfileController/Edit/5
-        public ActionResult Edit(int id)
+        // GET: UserProfileController/EditType/5
+        public ActionResult EditType(int id)
         {
-            return View();
+            UserProfile user = _userProfileRepository.GetById(id);
+            List<UserType> userTypes = _userTypeRepository.GetUserTypes();
+
+            UserProfileViewModel vm = new()
+            {
+                UserProfile = user,
+                UserTypes = userTypes
+            };
+
+            return View(vm);
         }
 
-        // POST: UserProfileController/Edit/5
+        // POST: UserProfileController/EditType/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public ActionResult EditType(UserProfileViewModel vm)
         {
             try
             {
+                _userProfileRepository.ChangeType(vm.UserProfile);
+
                 return RedirectToAction(nameof(Index));
             }
             catch
             {
-                return View();
+                return View(vm);
             }
         }
 
