@@ -1,15 +1,19 @@
-﻿using Microsoft.Data.SqlClient.Server;
-using System;
-using System.Runtime.Intrinsics.X86;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace TabloidMVC.Models
 {
     public class UserProfile
     {
         public int Id { get; set; }
+        [Required]
         public string FirstName { get; set; }
+        [Required]
         public string LastName { get; set; }
+        [Required]
         public string DisplayName { get; set; }
+        [EmailAddress]
+        [Required]
         public string Email { get; set; }
         public DateTime CreateDateTime { get; set; }
         public string ImageLocation { get; set; }
@@ -20,6 +24,13 @@ namespace TabloidMVC.Models
             get
             {
                 return $"{FirstName} {LastName}";
+            }
+        }
+        public string CreateDate
+        {
+            get
+            { 
+                return CreateDateTime.Date.ToShortDateString(); 
             }
         }
     }
