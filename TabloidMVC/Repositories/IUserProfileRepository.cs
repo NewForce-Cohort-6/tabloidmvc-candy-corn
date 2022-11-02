@@ -5,6 +5,8 @@ namespace TabloidMVC.Repositories
 {
     public interface IUserProfileRepository
     {
+        List<UserProfile> GetAll();
+        UserProfile GetById(int id);
         UserProfile GetByEmail(string email);
         List<UserProfile> GetAllUsers();
         void AddUser(UserProfile user);

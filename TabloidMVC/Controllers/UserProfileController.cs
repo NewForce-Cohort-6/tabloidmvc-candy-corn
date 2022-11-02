@@ -23,13 +23,31 @@ namespace TabloidMVC.Controllers
         // GET: UserProfileController
         public ActionResult Index()
         {
-            return View();
+            List<UserProfile> userProfiles = _userProfileRepository.GetAll();
+            List<UserType> userTypes = _userTypeRepository.GetUserTypes();
+
+            UserProfileViewModel vm = new()
+            {
+                UserProfiles = userProfiles,
+                UserTypes = userTypes,
+            };
+
+            return View(vm);
         }
 
         // GET: UserProfileController/Details/5
         public ActionResult Details(int id)
         {
-            return View();
+            UserProfile user = _userProfileRepository.GetById(id);
+            List<UserType> userTypes = _userTypeRepository.GetUserTypes();
+
+            UserProfileViewModel vm = new()
+            {
+                UserProfile = user,
+                UserTypes = userTypes
+            };
+
+            return View(vm);
         }
 
         // GET: UserProfileController/Register
@@ -37,7 +55,7 @@ namespace TabloidMVC.Controllers
         {
             List<UserType> userTypes = _userTypeRepository.GetUserTypes();
 
-            RegisterUserViewModel vm = new()
+            UserProfileViewModel vm = new()
             {
                 UserProfile = new UserProfile(),
                 UserTypes = userTypes
@@ -49,7 +67,7 @@ namespace TabloidMVC.Controllers
         // POST: UserProfileController/Register
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Register(RegisterUserViewModel vm)
+        public ActionResult Register(UserProfileViewModel vm)
         {
             try
             {
