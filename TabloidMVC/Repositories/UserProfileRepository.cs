@@ -199,5 +199,43 @@ namespace TabloidMVC.Repositories
                 }
             }
         }
+
+        public bool IsLastAdmin(int typeId)
+        {
+            using (var conn = Connection)
+            {
+                conn.Open();
+                using (var cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"
+                            SELECT COUNT(*) AS 'AdminCount'
+                            FROM UserProfile
+                            GROUP BY UserTypeId
+                            HAVING UserTypeId = 1";
+
+                    var reader = cmd.ExecuteReader();
+
+                    int adminCount = 0;
+
+                    if (reader.Read())
+                    {
+
+                        adminCount = reader.GetInt32(reader.GetOrdinal("AdminCount"));
+
+                        reader.Close();
+
+                    }
+                    if (adminCount == 1)
+                    {
+                            return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+            }
+        }
+
     }
 }
