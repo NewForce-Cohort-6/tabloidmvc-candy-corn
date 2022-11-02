@@ -87,7 +87,7 @@ namespace TabloidMVC.Controllers
 
             if (vm.Post == null)
             {
-                return NotFound();
+                return View("NotAuthorizedDetails");
             }
 
             return View(vm);
