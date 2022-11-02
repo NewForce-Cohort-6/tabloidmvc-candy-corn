@@ -2,7 +2,12 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.VisualBasic;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Net;
 using System.Security.Claims;
+using TabloidMVC.Models;
 using TabloidMVC.Models.ViewModels;
 using TabloidMVC.Repositories;
 
@@ -13,16 +18,25 @@ namespace TabloidMVC.Controllers
     {
         private readonly IPostRepository _postRepository;
         private readonly ICategoryRepository _categoryRepository;
+        private readonly IUserProfileRepository _userProfileRepository;
 
-        public PostController(IPostRepository postRepository, ICategoryRepository categoryRepository)
+        public PostController(IPostRepository postRepository, ICategoryRepository categoryRepository, IUserProfileRepository userProfileRepository)
         {
             _postRepository = postRepository;
             _categoryRepository = categoryRepository;
+            _userProfileRepository = userProfileRepository;
         }
 
         public IActionResult Index()
         {
             var posts = _postRepository.GetAllPublishedPosts();
+            return View(posts);
+        }
+
+        public IActionResult MyPosts()
+        {
+            int userId = GetCurrentUserProfileId();
+            var posts = _postRepository.GetUserPosts(userId);
             return View(posts);
         }
 
@@ -39,6 +53,38 @@ namespace TabloidMVC.Controllers
                 }
             }
             return View(post);
+        }
+
+        // GET: PostController/Delete/5
+        public ActionResult Delete(int id)
+        {
+                int userId = GetCurrentUserProfileId();
+                var post = _postRepository.GetUserPostById(id, userId);
+                if (post == null)
+                {
+                    return View("NotAuthorizedDetails");
+                }
+                else
+                {
+                    return View(post);
+                }
+        }
+
+        // POST: PostController/Delete/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Delete(int id, Post post)
+        {
+            try
+            {
+                _postRepository.DeletePost(id);
+
+                return RedirectToAction("Index");
+            }
+            catch (Exception ex)
+            {
+                return View(post);
+            }
         }
 
         public IActionResult Create()
