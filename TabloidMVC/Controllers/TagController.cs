@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.VisualBasic;
 using System;
+using System.Collections.Generic;
 using System.Security.Claims;
 using TabloidMVC.Models;
 using TabloidMVC.Models.ViewModels;
@@ -78,6 +79,28 @@ namespace TabloidMVC.Controllers
             }
         }
 
+        // GET: Owners/Create
+        public ActionResult Create()
+        {
+            
+            return View();
+        }
+
+        // POST: WalkersController/Create
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Create(Tag tag)
+        {
+            try
+            {
+                _tagRepository.AddTag(tag);
+                return RedirectToAction(nameof(Index));
+            }
+            catch (Exception ex)
+            {
+                return View(tag);
+            }
+        }
 
 
     }
