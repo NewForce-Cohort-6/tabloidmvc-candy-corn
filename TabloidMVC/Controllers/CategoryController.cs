@@ -6,6 +6,7 @@ using Microsoft.VisualBasic;
 using System.Security.Claims;
 using TabloidMVC.Models.ViewModels;
 using TabloidMVC.Repositories;
+using TabloidMVC.Models;
 
 namespace TabloidMVC.Controllers
 {
@@ -28,29 +29,31 @@ namespace TabloidMVC.Controllers
         }
 
         // GET: CategoryController/Details/5
-        public ActionResult Details(int id)
-        {
-            return View();
-        }
+        //public ActionResult Details(int id)
+        //{
+        //    return View();
+        //}
 
         // GET: CategoryController/Create
         public ActionResult Create()
         {
-            return View();
+            Category category = new Category();
+            return View(category);
         }
 
         // POST: CategoryController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public ActionResult Create(Category category)
         {
             try
             {
-                return RedirectToAction(nameof(Index));
+                _categoryRepository.Add(category);
+                return RedirectToAction("Index");
             }
             catch
             {
-                return View();
+                return View(category);
             }
         }
 
