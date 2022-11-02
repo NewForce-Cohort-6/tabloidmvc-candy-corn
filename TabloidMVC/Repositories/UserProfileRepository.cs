@@ -39,11 +39,7 @@ namespace TabloidMVC.Repositories
                             CreateDateTime = reader.GetDateTime(reader.GetOrdinal("CreateDateTime")),
                             ImageLocation = DbUtils.GetNullableString(reader, "ImageLocation"),
                             UserTypeId = reader.GetInt32(reader.GetOrdinal("UserTypeId")),
-                            UserType = new UserType()
-                            {
-                                Id = reader.GetInt32(reader.GetOrdinal("UserTypeId")),
-                                Name = reader.GetString(reader.GetOrdinal("UserTypeName"))
-                            },
+                           
                             };
 
                         users.Add(user);
@@ -101,9 +97,9 @@ namespace TabloidMVC.Repositories
             }
         }
 
-        List<UserProfile> IUserProfileRepository.GetAllUsers()
-        {
-            throw new System.NotImplementedException();
-        }
+        //List<UserProfile> IUserProfileRepository.GetAllUsers()
+        //{
+        //    throw new System.NotImplementedException();
+        //}
     }
 }

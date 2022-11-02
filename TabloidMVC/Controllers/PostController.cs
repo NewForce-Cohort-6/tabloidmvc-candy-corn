@@ -4,6 +4,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.VisualBasic;
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Net;
 using System.Security.Claims;
 using TabloidMVC.Models;
 using TabloidMVC.Models.ViewModels;
@@ -27,16 +29,8 @@ namespace TabloidMVC.Controllers
 
         public IActionResult Index()
         {
-            List<Post> posts = _postRepository.GetAllPublishedPosts();
-            List <UserProfile> users = _userProfileRepository.GetAllUsers();
-
-            PostIndexViewModel vm = new PostIndexViewModel()
-            {
-                GetAllPublishedPosts = posts,
-                GetAllUsers = users
-            };
-            
-            return View(vm);
+            var posts = _postRepository.GetAllPublishedPosts();
+            return View(posts);
         }
 
         public IActionResult MyPosts()
@@ -64,18 +58,16 @@ namespace TabloidMVC.Controllers
         // GET: PostController/Delete/5
         public ActionResult Delete(int id)
         {
-            try
-            {
                 int userId = GetCurrentUserProfileId();
                 var post = _postRepository.GetUserPostById(id, userId);
-
-                return View(post);
-            }
-            catch (Exception ex)
-            {
-                return View("Index");
-            }
-
+                if (post == null)
+                {
+                    return View("NotAuthorizedDetails");
+                }
+                else
+                {
+                    return View(post);
+                }
         }
 
         // POST: PostController/Delete/5
