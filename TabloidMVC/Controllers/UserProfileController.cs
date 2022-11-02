@@ -103,15 +103,32 @@ namespace TabloidMVC.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult EditType(UserProfileViewModel vm)
         {
-            try
+            // Check if user type has been toggled to Author (implying that it was Admin) and if it's the final admin
+            if (vm.UserProfile.UserTypeId == 2 && _userProfileRepository.IsLastAdmin(vm.UserProfile.UserTypeId))
             {
-                _userProfileRepository.ChangeType(vm.UserProfile);
+                // Get the data to recreate the view model
+                List<UserType> userTypes = _userTypeRepository.GetUserTypes();
+                UserProfile user = _userProfileRepository.GetById(vm.UserProfile.Id);
+                vm.UserTypes = userTypes;
+                vm.UserProfile = user;
 
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
+                // Add a message to be displayed in the view
+                vm.Message = $"Sorry! This user is the final admin and cannot be changed!";
+
                 return View(vm);
+            }
+            else
+            {
+                try
+                {
+                    _userProfileRepository.ChangeType(vm.UserProfile);
+
+                    return RedirectToAction(nameof(Index));
+                }
+                catch
+                {
+                    return View(vm);
+                }
             }
         }
 
