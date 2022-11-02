@@ -2,6 +2,7 @@
 using System.Linq;
 using Microsoft.Extensions.Configuration;
 using TabloidMVC.Models;
+using TabloidMVC.Utils;
 
 namespace TabloidMVC.Repositories
 {
@@ -32,6 +33,27 @@ namespace TabloidMVC.Repositories
                     reader.Close();
 
                     return categories;
+                }
+            }
+        }
+
+        public void Add(Category category)
+        {
+            using (var conn = Connection)
+            {
+                conn.Open();
+                using (var cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"
+                        INSERT INTO Category (
+                            Name )
+                        OUTPUT INSERTED.ID
+                        VALUES (
+                            @Name )";
+                    cmd.Parameters.AddWithValue("@Name", category.Name);
+
+
+                    category.Id = (int)cmd.ExecuteScalar();
                 }
             }
         }
