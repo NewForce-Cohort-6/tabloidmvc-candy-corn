@@ -10,5 +10,11 @@ namespace TabloidMVC.Repositories
         UserProfile GetByEmail(string email);
         void AddUser(UserProfile user);
         void ChangeType(UserProfile user);
+
+        /// <summary>
+        /// Queries UserProfile table for admin count
+        /// </summary>
+        /// <returns>True if admin count = 1, else false</returns>
+        bool IsLastAdmin(int id);
     }
 }

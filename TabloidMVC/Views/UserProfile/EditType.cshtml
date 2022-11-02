@@ -14,28 +14,33 @@
             <hr />
             <form asp-action="EditType">
                 <dl class="row">
-                <dt class="col-sm-2">
-                    @Html.DisplayNameFor(model => model.UserProfile.UserType)
-                </dt>
-                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                    <div class="form-group">
-                        <input asp-for="UserProfile.Id" type="hidden" class="form-control" />
-                    </div>
-                    <div class="form-group">
-                        <select placeholder="UserTypeId" asp-for="UserProfile.UserTypeId" class="form-control">
-                            <option value="">Select User Type</option>
-                            @foreach (UserType type in Model.UserTypes)
-                            {
-                                <option value="@type.Id">@type.Name</option>
-                            }
-                        </select>
-                        <span asp-validation-for="UserProfile.UserTypeId" class="text-danger"></span>
-                    </div>
-                    <div class="form-group ml-4">
-                        <input type="submit" value="Change" class="btn btn-primary btn-block">
-                        <input type="button" value="Cancel" class="btn btn-primary btn-block" onclick="location.href='@Url.Action("Index","UserProfile")';" />
-                    </div>
+                    <dt class="col-sm-2">
+                        @Html.DisplayNameFor(model => model.UserProfile.UserType)
+                    </dt>
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        <div class="form-group">
+                            <input asp-for="UserProfile.Id" type="hidden" class="form-control" />
+                        </div>
+                        <div class="form-group">
+                            <select placeholder="UserTypeId" asp-for="UserProfile.UserTypeId" class="form-control">
+                                <option value="">Select User Type</option>
+                                @foreach (UserType type in Model.UserTypes)
+                                {
+                                    <option value="@type.Id">@type.Name</option>
+                                }
+                            </select>
+                            <span asp-validation-for="UserProfile.UserTypeId" class="text-danger"></span>
+                        </div>
+                        <div class="form-group ml-4">
+                            <input type="submit" value="Change" class="btn btn-primary btn-block">
+                            <input type="button" value="Cancel" class="btn btn-primary btn-block" onclick="location.href='@Url.Action("Index","UserProfile")';" />
+                        </div>
+                    </dl>
                 </form>
+            @if (!string.IsNullOrEmpty(Model.Message))
+            {
+                <h4 class="text-danger">@Model.Message</h4>
+            }
         </section>
     </div>
 </div>
