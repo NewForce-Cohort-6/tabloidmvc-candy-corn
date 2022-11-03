@@ -22,7 +22,7 @@ namespace TabloidMVC.Repositories
                 {
                     cmd.CommandText = @"
                        SELECT u.id, u.FirstName, u.LastName, u.DisplayName, u.Email,
-                              u.CreateDateTime, u.ImageLocation, u.UserTypeId,
+                              u.CreateDateTime, u.ImageLocation, u.UserTypeId, u.Active,
                               ut.[Name] AS UserTypeName
                          FROM UserProfile u
                               LEFT JOIN UserType ut ON u.UserTypeId = ut.id";
@@ -30,7 +30,7 @@ namespace TabloidMVC.Repositories
                     var reader = cmd.ExecuteReader();
 
                     List<UserProfile> userProfiles = new();
-                    while(reader.Read())
+                    while (reader.Read())
                     {
                         UserProfile userProfile = new()
                         {
@@ -47,6 +47,7 @@ namespace TabloidMVC.Repositories
                                 Id = reader.GetInt32(reader.GetOrdinal("UserTypeId")),
                                 Name = reader.GetString(reader.GetOrdinal("UserTypeName"))
                             },
+                            Active = reader.GetBoolean(reader.GetOrdinal("Active"))
                         };
 
                         userProfiles.Add(userProfile);
@@ -69,7 +70,7 @@ namespace TabloidMVC.Repositories
                 {
                     cmd.CommandText = @"
                        SELECT u.id, u.FirstName, u.LastName, u.DisplayName, u.Email,
-                              u.CreateDateTime, u.ImageLocation, u.UserTypeId,
+                              u.CreateDateTime, u.ImageLocation, u.UserTypeId, u.Active,
                               ut.[Name] AS UserTypeName
                          FROM UserProfile u
                               LEFT JOIN UserType ut ON u.UserTypeId = ut.id
@@ -96,6 +97,7 @@ namespace TabloidMVC.Repositories
                                 Id = reader.GetInt32(reader.GetOrdinal("UserTypeId")),
                                 Name = reader.GetString(reader.GetOrdinal("UserTypeName"))
                             },
+                            Active = reader.GetBoolean(reader.GetOrdinal("Active"))
                         };
                     }
 
@@ -115,7 +117,7 @@ namespace TabloidMVC.Repositories
                 {
                     cmd.CommandText = @"
                        SELECT u.id, u.FirstName, u.LastName, u.DisplayName, u.Email,
-                              u.CreateDateTime, u.ImageLocation, u.UserTypeId,
+                              u.CreateDateTime, u.ImageLocation, u.UserTypeId, u.Active,
                               ut.[Name] AS UserTypeName
                          FROM UserProfile u
                               LEFT JOIN UserType ut ON u.UserTypeId = ut.id
@@ -142,6 +144,7 @@ namespace TabloidMVC.Repositories
                                 Id = reader.GetInt32(reader.GetOrdinal("UserTypeId")),
                                 Name = reader.GetString(reader.GetOrdinal("UserTypeName"))
                             },
+                            Active = reader.GetBoolean(reader.GetOrdinal("Active"))
                         };
                     }
 
@@ -159,9 +162,9 @@ namespace TabloidMVC.Repositories
                 using (var cmd = conn.CreateCommand())
                 {
                     cmd.CommandText = @"
-                        INSERT INTO UserProfile (FirstName, LastName, DisplayName, Email, CreateDateTime, ImageLocation, UserTypeId)
+                        INSERT INTO UserProfile (FirstName, LastName, DisplayName, Email, CreateDateTime, ImageLocation, UserTypeId, Active)
                         OUTPUT INSERTED.ID
-                        VALUES (@firstName, @lastName, @displayName, @email, @createDateTime, @imageLocation, @userTypeId);
+                        VALUES (@firstName, @lastName, @displayName, @email, @createDateTime, @imageLocation, @userTypeId, 1);
                     ";
 
                     cmd.Parameters.AddWithValue("@firstName", user.FirstName);
@@ -227,12 +230,52 @@ namespace TabloidMVC.Repositories
                     }
                     if (adminCount == 1)
                     {
-                            return true;
+                        return true;
                     }
                     else
                     {
                         return false;
                     }
+                }
+            }
+        }
+
+        public void Deactivate(int id)
+        {
+            using (var conn = Connection)
+            {
+                conn.Open();
+                using (var cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"
+                            UPDATE UserProfile
+                            SET
+                                Active = 0
+                            WHERE Id = @id";
+
+                    cmd.Parameters.AddWithValue("@id", id);
+
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
+
+        public void Activate(int id)
+        {
+            using (var conn = Connection)
+            {
+                conn.Open();
+                using (var cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"
+                            UPDATE UserProfile
+                            SET
+                                Active = 1
+                            WHERE Id = @id";
+
+                    cmd.Parameters.AddWithValue("@id", id);
+
+                    cmd.ExecuteNonQuery();
                 }
             }
         }

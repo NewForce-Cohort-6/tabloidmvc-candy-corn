@@ -132,24 +132,51 @@ namespace TabloidMVC.Controllers
             }
         }
 
-        // GET: UserProfileController/Delete/5
-        public ActionResult Delete(int id)
+        // GET: UserProfileController/Deactivate/5
+        public ActionResult Deactivate(int id)
         {
-            return View();
+            UserProfile user = _userProfileRepository.GetById(id);
+
+            return View(user);
         }
 
-        // POST: UserProfileController/Delete/5
+        // POST: UserProfileController/Deactivate/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public ActionResult Deactivate(int id, UserProfile user)
         {
             try
             {
+                _userProfileRepository.Deactivate(id);
                 return RedirectToAction(nameof(Index));
             }
             catch
             {
-                return View();
+                return View(user);
+            }
+        }
+
+        // GET: UserProfileController/Activate/5
+        public ActionResult Activate(int id)
+        {
+            UserProfile user = _userProfileRepository.GetById(id);
+
+            return View(user);
+        }
+
+        // POST: UserProfileController/Activate/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Activate(int id, UserProfile user)
+        {
+            try
+            {
+                _userProfileRepository.Activate(id);
+                return RedirectToAction(nameof(Index));
+            }
+            catch
+            {
+                return View(user);
             }
         }
     }
