@@ -19,12 +19,14 @@ namespace TabloidMVC.Controllers
         private readonly IPostRepository _postRepository;
         private readonly ICategoryRepository _categoryRepository;
         private readonly IUserProfileRepository _userProfileRepository;
+        private readonly ISubscriptionRepository _subscriptionRepository;
 
-        public PostController(IPostRepository postRepository, ICategoryRepository categoryRepository, IUserProfileRepository userProfileRepository)
+        public PostController(IPostRepository postRepository, ICategoryRepository categoryRepository, IUserProfileRepository userProfileRepository, ISubscriptionRepository subscriptionRepository)
         {
             _postRepository = postRepository;
             _categoryRepository = categoryRepository;
             _userProfileRepository = userProfileRepository;
+            _subscriptionRepository = subscriptionRepository;
         }
 
         public IActionResult Index()
@@ -148,6 +150,38 @@ namespace TabloidMVC.Controllers
                 vm.CategoryOptions = _categoryRepository.GetAll();
                 return View(vm);
             }
+        }
+
+        public IActionResult CreateSubscription(int id)
+        {
+            
+            return View("CreateSubscription");
+        }
+
+        [HttpPost]
+        public IActionResult CreateSubscription(int id, Subscription subscription)
+        {
+
+            try
+            {
+                subscription.BeginDateTime = DateAndTime.Now;
+                subscription.SubscriberUserProfileId = GetCurrentUserProfileId();
+                subscription.ProviderUserProfileId = _postRepository.GetPublishedPostById(id).UserProfileId;
+                subscription.EndDateTime = DateAndTime.Now.AddDays(365);
+
+                _subscriptionRepository.Add(subscription);
+
+                return RedirectToAction("Index");
+            }
+            catch (Exception ex)
+            {
+                return View();
+            }
+        }
+
+        private IActionResult RedirectToAction(List<Post> posts)
+        {
+            throw new NotImplementedException();
         }
 
         private int GetCurrentUserProfileId()

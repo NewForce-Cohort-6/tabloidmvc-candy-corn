@@ -7,7 +7,7 @@ using TabloidMVC.Utils;
 
 namespace TabloidMVC.Repositories
 {
-    public class SubscriptionRepository : BaseRepository
+    public class SubscriptionRepository : BaseRepository, ISubscriptionRepository
     {
         public SubscriptionRepository(IConfiguration config) : base(config) { }
 
