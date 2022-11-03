@@ -1,0 +1,68 @@
+﻿@model TabloidMVC.Models.ViewModels.UserProfileViewModel
+
+@{
+    ViewData["Title"] = $"Details - {Model.UserProfile.DisplayName}";
+}
+
+<div class="container pt-5">
+    <div class="user">
+        <section class="px-3">
+            <div class="row justify-content-between">
+                <h1>Details - @Model.UserProfile.DisplayName</h1>
+            </div>
+            <h4></h4>
+            <hr />
+            <div class="row"">
+               @if (String.IsNullOrEmpty(Model.UserProfile.ImageLocation))
+               {
+                    <img src="https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_960_720.png"
+                     class="card-img-top ml-3 mb-3 w-25"
+                     alt="User Avatar" />
+               }
+               else
+               {
+                   <img src="@Model.UserProfile.ImageLocation"
+                   class="card-img-top ml-3 mb-3 w-25"
+                   alt="User Avatar" />
+               }
+            </div>
+            <dl class="row">
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.UserProfile.FullName)
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.UserProfile.FullName)
+                </dd>
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.UserProfile.DisplayName)
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.UserProfile.DisplayName)
+                </dd>
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.UserProfile.Email)
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.UserProfile.Email)
+                </dd>
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.UserProfile.CreateDate)
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.UserProfile.CreateDate)
+                </dd>
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.UserProfile.UserType)
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.UserProfile.UserType.Name)
+                </dd>
+            </dl>
+            <div class="row">
+                <a href="/UserProfile" class="btn btn-outline-primary mx-1" title="Back to List">
+                    <i class="fas fa-solid fa-arrow-left"></i>
+                </a>
+            </div>
+        </section>
+    </div>
+</div>
