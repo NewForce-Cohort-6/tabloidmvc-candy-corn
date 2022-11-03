@@ -33,5 +33,6 @@ namespace TabloidMVC.Models
                 return CreateDateTime.Date.ToShortDateString(); 
             }
         }
+        public bool Active { get; set; }
     }
 }
